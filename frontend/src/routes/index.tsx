@@ -1,4 +1,7 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+
+import { Layout } from '../components/Layout';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
 import Dashboard from '../pages/dashboard';
 import Login from '../pages/auth/Login';
@@ -22,32 +25,43 @@ import UserList from '../pages/users/List';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
-  { path: '/dashboard', element: <Dashboard /> },
-  
-  // Customers Module
-  { path: '/customers', element: <CustomerList /> },
-  { path: '/customers/new', element: <CustomerForm /> },
-  { path: '/customers/:id', element: <CustomerDetail /> },
-  { path: '/customers/:id/edit', element: <CustomerForm /> },
-  
-  // Products & Inventory Module
-  { path: '/products', element: <ProductList /> },
-  { path: '/products/new', element: <ProductForm /> },
-  { path: '/products/:id/edit', element: <ProductForm /> },
-  { path: '/stock-movements', element: <StockMovements /> },
-  
-  // Sales Challan Module
-  { path: '/challans', element: <ChallanList /> },
-  { path: '/challans/new', element: <ChallanForm /> },
-  { path: '/challans/:id', element: <ChallanDetail /> },
-  { path: '/challans/:id/edit', element: <ChallanForm /> },
-  
-  // Invoice Module
-  { path: '/invoices', element: <InvoiceList /> },
-  { path: '/invoices/:id', element: <InvoiceDetail /> },
-  
-  // Users/Roles Module
-  { path: '/users', element: <UserList /> },
-  
-  { path: '*', element: <div>404 Not Found</div> },
+  {
+    path: '/',
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true, element: <Navigate to="/dashboard" replace /> },
+      { path: 'dashboard', element: <Dashboard /> },
+      
+      // Customers Module: Admin, Sales
+      { path: 'customers', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerList /></ProtectedRoute> },
+      { path: 'customers/new', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerForm /></ProtectedRoute> },
+      { path: 'customers/:id', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerDetail /></ProtectedRoute> },
+      { path: 'customers/:id/edit', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerForm /></ProtectedRoute> },
+      
+      // Products & Inventory Module: Admin, Warehouse
+      { path: 'products', element: <ProtectedRoute allowedRoles={['ADMIN', 'WAREHOUSE']}><ProductList /></ProtectedRoute> },
+      { path: 'products/new', element: <ProtectedRoute allowedRoles={['ADMIN', 'WAREHOUSE']}><ProductForm /></ProtectedRoute> },
+      { path: 'products/:id/edit', element: <ProtectedRoute allowedRoles={['ADMIN', 'WAREHOUSE']}><ProductForm /></ProtectedRoute> },
+      { path: 'stock-movements', element: <ProtectedRoute allowedRoles={['ADMIN', 'WAREHOUSE']}><StockMovements /></ProtectedRoute> },
+      
+      // Sales Challan Module: Admin, Sales, Warehouse
+      { path: 'challans', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES', 'WAREHOUSE']}><ChallanList /></ProtectedRoute> },
+      { path: 'challans/new', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES', 'WAREHOUSE']}><ChallanForm /></ProtectedRoute> },
+      { path: 'challans/:id', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES', 'WAREHOUSE']}><ChallanDetail /></ProtectedRoute> },
+      { path: 'challans/:id/edit', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES', 'WAREHOUSE']}><ChallanForm /></ProtectedRoute> },
+      
+      // Invoice Module: Admin, Sales, Accounts
+      { path: 'invoices', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES', 'ACCOUNTS']}><InvoiceList /></ProtectedRoute> },
+      { path: 'invoices/:id', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES', 'ACCOUNTS']}><InvoiceDetail /></ProtectedRoute> },
+      
+      // Users/Roles Module: Admin
+      { path: 'users', element: <ProtectedRoute allowedRoles={['ADMIN']}><UserList /></ProtectedRoute> },
+      
+      { path: '*', element: <div>404 Not Found</div> },
+    ],
+  },
 ]);

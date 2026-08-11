@@ -1,85 +1,76 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap');
-
 @import "tailwindcss";
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+@theme {
+  --color-surface-container-low: #f4f4f4;
+  --color-surface-container: #f4f4f4;
+  --color-surface-container-high: #e0e0e0;
+  --color-surface-container-highest: #c6c6c6;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-variant: #f4f4f4;
+  --color-surface-tint: #0f62fe;
+  --color-surface-bright: #ffffff;
+  --color-surface-dim: #e0e0e0;
+
+  --color-on-surface: #161616;
+  --color-on-surface-variant: #525252;
+  --color-on-background: #161616;
+
+  --color-outline: #8d8d8d;
+  --color-outline-variant: #e0e0e0;
+
+  --color-primary: #0f62fe;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #d0e2ff;
+  --color-on-primary-container: #161616;
+  --color-primary-fixed: #d0e2ff;
+  --color-primary-fixed-dim: #78a9ff;
+  --color-on-primary-fixed: #001d6c;
+  --color-on-primary-fixed-variant: #0043ce;
+
+  --color-secondary: #6f6f6f;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e0e0e0;
+  --color-on-secondary-container: #525252;
+  --color-secondary-fixed: #e0e0e0;
+  --color-secondary-fixed-dim: #c6c6c6;
+  --color-on-secondary-fixed: #161616;
+  --color-on-secondary-fixed-variant: #525252;
+
+  --color-tertiary: #198038;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #a7f0ba;
+  --color-on-tertiary-container: #044317;
+
+  --color-error: #da1e28;
+  --color-on-error: #ffffff;
+  --color-error-container: #fff1f1;
+  --color-on-error-container: #750e13;
+
+  --font-headline: "IBM Plex Sans", sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-display: "IBM Plex Sans", sans-serif;
+  --font-label: "IBM Plex Sans", sans-serif;
 }
 
 @layer base {
   :root {
     --background: #ffffff;
     --foreground: #161616;
-    --card: #f4f4f4;
+    --card: #ffffff;
     --card-foreground: #161616;
-    --popover: #ffffff;
-    --popover-foreground: #161616;
-    --primary: #0f62fe;
-    --primary-foreground: #ffffff;
-    --secondary: #e0e0e0;
-    --secondary-foreground: #161616;
-    --muted: #f4f4f4;
-    --muted-foreground: #525252;
-    --accent: #d0e2ff;
-    --accent-foreground: #161616;
-    --destructive: #da1e28;
-    --destructive-foreground: #ffffff;
     --border: #e0e0e0;
     --input: #f4f4f4;
-    --ring: #0f62fe;
-    --radius: 0;
+    --primary: #0f62fe;
+    --primary-foreground: #ffffff;
   }
 
-  .dark {
-    --background: #161616;
-    --foreground: #ffffff;
-    --card: #393939;
-    --card-foreground: #ffffff;
-    --popover: #161616;
-    --popover-foreground: #ffffff;
-    --primary: #78a9ff;
-    --primary-foreground: #001d6c;
-    --secondary: #525252;
-    --secondary-foreground: #ffffff;
-    --muted: #393939;
-    --muted-foreground: #e0e0e0;
-    --accent: #393939;
-    --accent-foreground: #ffffff;
-    --destructive: #fa4d56;
-    --destructive-foreground: #161616;
-    --border: #525252;
-    --input: #393939;
-    --ring: #78a9ff;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground font-sans;
+    background-color: #f4f4f4;
+    color: #161616;
     font-family: 'IBM Plex Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
   }
 }
