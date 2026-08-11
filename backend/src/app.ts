@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import authRoutes from './modules/auth/auth.routes';
+import customersRoutes from './modules/customers/customers.routes';
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use(express.json());
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/customers', customersRoutes);
 
 // Health Check
 app.get('/health', (req: Request, res: Response) => {

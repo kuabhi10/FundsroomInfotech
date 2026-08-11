@@ -36,10 +36,10 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: 'dashboard', element: <Dashboard /> },
       
-      // Customers Module: Admin, Sales
-      { path: 'customers', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerList /></ProtectedRoute> },
+      // Customers Module
+      { path: 'customers', element: <ProtectedRoute><CustomerList /></ProtectedRoute> },
       { path: 'customers/new', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerForm /></ProtectedRoute> },
-      { path: 'customers/:id', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerDetail /></ProtectedRoute> },
+      { path: 'customers/:id', element: <ProtectedRoute><CustomerDetail /></ProtectedRoute> },
       { path: 'customers/:id/edit', element: <ProtectedRoute allowedRoles={['ADMIN', 'SALES']}><CustomerForm /></ProtectedRoute> },
       
       // Products & Inventory Module: Admin, Warehouse
