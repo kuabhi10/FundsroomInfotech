@@ -184,3 +184,10 @@ model Invoice {
   @@index([customerId])
   @@map("invoices")
 }
+
+model ChallanSequence {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  @@map("challan_sequences")
+}

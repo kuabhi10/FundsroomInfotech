@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 import api from '../../api/axios';
@@ -8,8 +8,14 @@ export default function Login() {
   const [email, setEmail] = useState('admin@erp.local');
   const [password, setPassword] = useState('Password123!');
   const [loading, setLoading] = useState(false);
-  const { setAuth } = useAuthStore();
+  const { user, token, setAuth } = useAuthStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && token) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, token, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
