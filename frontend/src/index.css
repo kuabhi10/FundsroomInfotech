@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #161616;
+    --card: #f4f4f4;
+    --card-foreground: #161616;
+    --popover: #ffffff;
+    --popover-foreground: #161616;
+    --primary: #0f62fe;
+    --primary-foreground: #ffffff;
+    --secondary: #e0e0e0;
+    --secondary-foreground: #161616;
+    --muted: #f4f4f4;
+    --muted-foreground: #525252;
+    --accent: #d0e2ff;
+    --accent-foreground: #161616;
+    --destructive: #da1e28;
+    --destructive-foreground: #ffffff;
+    --border: #e0e0e0;
+    --input: #f4f4f4;
+    --ring: #0f62fe;
+    --radius: 0;
+  }
+
+  .dark {
+    --background: #161616;
+    --foreground: #ffffff;
+    --card: #393939;
+    --card-foreground: #ffffff;
+    --popover: #161616;
+    --popover-foreground: #ffffff;
+    --primary: #78a9ff;
+    --primary-foreground: #001d6c;
+    --secondary: #525252;
+    --secondary-foreground: #ffffff;
+    --muted: #393939;
+    --muted-foreground: #e0e0e0;
+    --accent: #393939;
+    --accent-foreground: #ffffff;
+    --destructive: #fa4d56;
+    --destructive-foreground: #161616;
+    --border: #525252;
+    --input: #393939;
+    --ring: #78a9ff;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+}
