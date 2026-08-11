@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getStockMovements, createStockMovement } from '../../api/stockMovements';
 import { getProducts } from '../../api/products';
@@ -20,8 +20,19 @@ export default function StockMovementsList() {
   const [page, setPage] = useState(1);
   const limit = 10;
   
-  const [typeFilter, setTypeFilter] = useState('');
+  // Pending filter input states
   const [productFilter, setProductFilter] = useState(initialProductId);
+  const [typeFilter, setTypeFilter] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+
+  // Applied filter state (drives data fetching)
+  const [appliedFilters, setAppliedFilters] = useState({
+    productId: initialProductId,
+    type: '',
+    dateFrom: '',
+    dateTo: '',
+  });
   
   // Modal State
   const [showModal, setShowModal] = useState(false);
@@ -42,11 +53,13 @@ export default function StockMovementsList() {
     reason: '',
   });
 
-  const fetchMovements = async () => {
+  const fetchMovements = useCallback(async () => {
     try {
       const response = await getStockMovements({
-        type: typeFilter as any || undefined,
-        productId: productFilter || undefined,
+        type: appliedFilters.type as any || undefined,
+        productId: appliedFilters.productId || undefined,
+        dateFrom: appliedFilters.dateFrom || undefined,
+        dateTo: appliedFilters.dateTo || undefined,
         page,
         limit,
       });
@@ -55,18 +68,18 @@ export default function StockMovementsList() {
     } catch (error) {
       console.error('Failed to fetch stock movements', error);
     }
-  };
+  }, [appliedFilters, page]);
 
   useEffect(() => {
     fetchMovements();
-  }, [typeFilter, productFilter, page]);
+  }, [fetchMovements]);
 
   // Load products for dropdown (in filters and modal)
   useEffect(() => {
     if (products.length === 0) {
       const fetchAllProducts = async () => {
         try {
-          const response = await getProducts({ limit: 1000 }); // MVP: load max 1000 for dropdown
+          const response = await getProducts({ limit: 1000 });
           setProducts(response.data);
           if (response.data.length > 0 && !formData.productId) {
             setFormData(prev => ({ ...prev, productId: response.data[0].id }));
@@ -79,6 +92,30 @@ export default function StockMovementsList() {
     }
   }, [products.length, formData.productId]);
 
+  const handleApplyFilters = () => {
+    setPage(1);
+    setAppliedFilters({
+      productId: productFilter,
+      type: typeFilter,
+      dateFrom,
+      dateTo,
+    });
+  };
+
+  const handleResetFilters = () => {
+    setProductFilter('');
+    setTypeFilter('');
+    setDateFrom('');
+    setDateTo('');
+    setPage(1);
+    setAppliedFilters({
+      productId: '',
+      type: '',
+      dateFrom: '',
+      dateTo: '',
+    });
+  };
+
   const totalPages = Math.ceil(total / limit) || 1;
   const startItem = total > 0 ? (page - 1) * limit + 1 : 0;
   const endItem = Math.min(page * limit, total);
@@ -89,7 +126,6 @@ export default function StockMovementsList() {
       ...prev,
       [name]: type === 'number' ? Number(value) : value,
     }));
-    // Clear inline error on change
     if (name === 'quantity' || name === 'type') {
       setInlineError('');
     }
@@ -109,7 +145,6 @@ export default function StockMovementsList() {
     } catch (error: any) {
       const errMsg = error.response?.data?.error || 'Failed to record movement';
       if (error.response?.status === 400 && formData.type === 'OUT') {
-        // Show exact backend error inline per requirements
         setInlineError(errMsg);
       } else {
         toast.error(errMsg);
@@ -146,14 +181,14 @@ export default function StockMovementsList() {
         </div>
 
         {/* Filters Bar */}
-        <div className="bg-surface-container p-4 border border-outline-variant flex items-center justify-between gap-4 shadow-sm rounded-none">
-          <div className="flex flex-wrap gap-4 items-center">
+        <div className="bg-surface-container p-4 border border-outline-variant flex flex-col md:flex-row items-start md:items-end justify-between gap-4 shadow-sm rounded-none">
+          <div className="flex flex-wrap gap-4 items-end flex-1">
             <div className="flex flex-col">
               <label className="text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">Product</label>
               <div className="relative">
                 <select 
                   value={productFilter}
-                  onChange={(e) => { setProductFilter(e.target.value); setPage(1); }}
+                  onChange={(e) => setProductFilter(e.target.value)}
                   className="appearance-none bg-surface border-b border-outline-variant focus:border-primary px-3 py-1.5 pr-8 text-sm font-body text-on-surface min-w-[200px] h-9 focus:ring-0 rounded-none border-t-0 border-l-0 border-r-0"
                 >
                   <option value="">All Products</option>
@@ -170,8 +205,8 @@ export default function StockMovementsList() {
               <div className="relative">
                 <select 
                   value={typeFilter}
-                  onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-                  className="appearance-none bg-surface border-b border-outline-variant focus:border-primary px-3 py-1.5 pr-8 text-sm font-body text-on-surface min-w-[150px] h-9 focus:ring-0 rounded-none border-t-0 border-l-0 border-r-0"
+                  onChange={(e) => setTypeFilter(e.target.value)}
+                  className="appearance-none bg-surface border-b border-outline-variant focus:border-primary px-3 py-1.5 pr-8 text-sm font-body text-on-surface min-w-[130px] h-9 focus:ring-0 rounded-none border-t-0 border-l-0 border-r-0"
                 >
                   <option value="">All Types</option>
                   <option value="IN">IN</option>
@@ -184,16 +219,45 @@ export default function StockMovementsList() {
             <div className="flex flex-col">
               <label className="text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">Date Range</label>
               <div className="relative flex items-center">
-                <input className="bg-surface border-b border-outline-variant focus:border-primary px-3 py-1.5 text-sm font-body text-on-surface h-9 focus:ring-0 rounded-none border-t-0 border-l-0 border-r-0" type="date" />
+                <input 
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="bg-surface border-b border-outline-variant focus:border-primary px-3 py-1.5 text-sm font-body text-on-surface h-9 focus:ring-0 rounded-none border-t-0 border-l-0 border-r-0" 
+                  type="date" 
+                  placeholder="From"
+                />
                 <span className="mx-2 text-outline-variant">-</span>
-                <input className="bg-surface border-b border-outline-variant focus:border-primary px-3 py-1.5 text-sm font-body text-on-surface h-9 focus:ring-0 rounded-none border-t-0 border-l-0 border-r-0" type="date" />
+                <input 
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="bg-surface border-b border-outline-variant focus:border-primary px-3 py-1.5 text-sm font-body text-on-surface h-9 focus:ring-0 rounded-none border-t-0 border-l-0 border-r-0" 
+                  type="date" 
+                  placeholder="To"
+                />
               </div>
             </div>
           </div>
-          <button className="text-primary font-body text-sm font-medium hover:underline flex items-center space-x-1 px-2 py-1">
-            <span className="material-symbols-outlined text-sm">filter_list</span>
-            <span>More Filters</span>
-          </button>
+
+          <div className="flex items-center gap-2 self-end">
+            <button 
+              onClick={handleApplyFilters}
+              className="bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-body text-sm font-medium px-4 h-9 transition-colors flex items-center space-x-1.5 shadow-sm rounded-none"
+            >
+              <span className="material-symbols-outlined text-sm">filter_alt</span>
+              <span>Apply Filters</span>
+            </button>
+
+            {(productFilter || typeFilter || dateFrom || dateTo) && (
+              <button 
+                onClick={handleResetFilters}
+                className="bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-body text-sm font-medium px-3 h-9 transition-colors flex items-center space-x-1 border border-outline-variant rounded-none"
+                title="Reset Filters"
+              >
+                <span className="material-symbols-outlined text-sm">restart_alt</span>
+                <span>Reset</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Data Table */}
@@ -241,7 +305,7 @@ export default function StockMovementsList() {
                 {data.length === 0 && (
                   <tr>
                     <td colSpan={6} className="text-center py-8 text-on-surface-variant">
-                      No stock movements found.
+                      No stock movements found matching current filters.
                     </td>
                   </tr>
                 )}

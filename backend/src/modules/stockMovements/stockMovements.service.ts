@@ -18,7 +18,11 @@ export const getStockMovements = async (filters: any, page: number, limit: numbe
   if (filters.dateFrom || filters.dateTo) {
     where.createdAt = {};
     if (filters.dateFrom) where.createdAt.gte = new Date(filters.dateFrom);
-    if (filters.dateTo) where.createdAt.lte = new Date(filters.dateTo);
+    if (filters.dateTo) {
+      const endOfDay = new Date(filters.dateTo);
+      endOfDay.setHours(23, 59, 59, 999);
+      where.createdAt.lte = endOfDay;
+    }
   }
 
   const [total, data] = await Promise.all([
