@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const auth_routes_1 = __importDefault(require("./modules/auth/auth.routes"));
+const customers_routes_1 = __importDefault(require("./modules/customers/customers.routes"));
+const products_routes_1 = __importDefault(require("./modules/products/products.routes"));
+const stockMovements_routes_1 = __importDefault(require("./modules/stockMovements/stockMovements.routes"));
 const app = (0, express_1.default)();
 // Dynamic CORS configuration supporting Vercel previews, local dev, and cleaned FRONTEND_URL env var
 const getCleanOrigin = (urlStr) => {
@@ -47,6 +50,9 @@ app.use((0, cors_1.default)({
 app.use(express_1.default.json());
 // Routes
 app.use('/auth', auth_routes_1.default);
+app.use('/customers', customers_routes_1.default);
+app.use('/products', products_routes_1.default);
+app.use('/stock-movements', stockMovements_routes_1.default);
 // Health Check
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
