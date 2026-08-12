@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getProducts } from '../../api/products';
 import type { Product } from '../../types/product';
 import { useAuthStore } from '../../store/auth';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function ProductList() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function ProductList() {
   const [data, setData] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const limit = 10;
   
   const [search, setSearch] = useState('');
@@ -31,6 +33,7 @@ export default function ProductList() {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setIsLoading(true);
       try {
         const response = await getProducts({
           search: debouncedSearch || undefined,
@@ -43,6 +46,8 @@ export default function ProductList() {
         setTotal(response.total);
       } catch (error) {
         console.error('Failed to fetch products', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchProducts();
@@ -122,6 +127,10 @@ export default function ProductList() {
           </div>
         </div>
 
+        {isLoading ? (
+          <Spinner />
+        ) : (
+        <>
         {/* Data Table */}
         <div className="bg-surface border border-outline-variant overflow-hidden rounded-sm shadow-sm">
           <div className="overflow-x-auto">
@@ -229,6 +238,8 @@ export default function ProductList() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
     </div>
   );

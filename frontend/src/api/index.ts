@@ -18,5 +18,6 @@ export * as productsApi from './products';
 export * as stockMovementsApi from './stockMovements';
 export * as challansApi from './challans';
 export * as invoicesApi from './invoices';
+export * as dashboardApi from './dashboard';
 
 export default api;

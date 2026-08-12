@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { challansApi } from '../../api';
 import type { Challan } from '../../api/challans';
 import { toast } from 'sonner';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function ChallanList() {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ export default function ChallanList() {
             <tbody className="divide-y divide-outline-variant text-on-secondary-container">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-on-surface-variant">Loading...</td>
+                  <td colSpan={6} className="py-8"><Spinner /></td>
                 </tr>
               ) : challans.length === 0 ? (
                 <tr>

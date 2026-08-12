@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { invoicesApi, customersApi } from '../../api';
 import type { Invoice } from '../../api/invoices';
 import { toast } from 'sonner';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function InvoiceList() {
   const navigate = useNavigate();
@@ -137,7 +138,7 @@ export default function InvoiceList() {
           <tbody className="text-sm">
             {loading ? (
               <tr>
-                <td colSpan={6} className="p-8 text-center text-on-surface-variant">Loading invoices...</td>
+                <td colSpan={6} className="p-8"><Spinner /></td>
               </tr>
             ) : invoices.length === 0 ? (
               <tr>

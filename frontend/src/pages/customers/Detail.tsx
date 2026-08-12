@@ -5,6 +5,7 @@ import type { Customer } from '../../types/customer';
 import { useAuthStore } from '../../store/auth';
 import { Badge } from '../../components/ui/badge';
 import { toast } from 'sonner';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function CustomerDetail() {
   const { id } = useParams();
@@ -49,11 +50,7 @@ export default function CustomerDetail() {
   };
 
   if (!customer) {
-    return (
-      <div className="flex-1 p-6 flex justify-center items-center h-full">
-        <span className="text-[var(--color-on-surface-variant)]">Loading...</span>
-      </div>
-    );
+    return <Spinner />;
   }
 
   const getStatusBadge = (status: string) => {

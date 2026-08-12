@@ -3,12 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { challansApi } from '../../api';
 import type { Challan } from '../../api/challans';
 import { toast } from 'sonner';
+import { Spinner } from '../../components/ui/spinner';
+import { ConfirmDialog } from '../../components/ui/confirm-dialog';
 
 export default function ChallanDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [challan, setChallan] = useState<Challan | null>(null);
   const [loading, setLoading] = useState(true);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   const fetchChallan = async () => {
     try {
@@ -29,7 +33,6 @@ export default function ChallanDetail() {
   }, [id]);
 
   const handleCancel = async () => {
-    if (!window.confirm('Are you sure you want to cancel this challan? This will revert stock.')) return;
     try {
       if (!id) return;
       await challansApi.cancelChallan(id);
@@ -41,7 +44,6 @@ export default function ChallanDetail() {
   };
 
   const handleConfirm = async () => {
-    if (!window.confirm('Are you sure you want to confirm this challan? This will deduct stock.')) return;
     try {
       if (!id) return;
       await challansApi.confirmChallan(id);
@@ -71,7 +73,7 @@ export default function ChallanDetail() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-on-surface-variant">Loading challan details...</div>;
+    return <Spinner />;
   }
 
   if (!challan) return null;
@@ -125,7 +127,7 @@ export default function ChallanDetail() {
                   Edit
                 </button>
                 <button 
-                  onClick={handleConfirm}
+                  onClick={() => setConfirmDialogOpen(true)}
                   className="px-4 py-2 bg-primary text-on-primary hover:bg-primary/90 transition-colors rounded text-sm font-medium flex items-center gap-2 shadow-sm"
                 >
                   <span className="material-symbols-outlined text-sm">check_circle</span>
@@ -136,7 +138,7 @@ export default function ChallanDetail() {
             {isConfirmed && (
               <>
                 <button 
-                  onClick={handleCancel}
+                  onClick={() => setCancelDialogOpen(true)}
                   className="px-4 py-2 border border-error text-error bg-surface hover:bg-error-container transition-colors rounded text-sm font-medium flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-sm">cancel</span>
@@ -238,6 +240,26 @@ export default function ChallanDetail() {
         </div>
         
       </div>
+
+      <ConfirmDialog 
+        open={cancelDialogOpen} 
+        onOpenChange={setCancelDialogOpen}
+        title="Cancel Challan"
+        description="Are you sure you want to cancel this challan? This will revert stock and cannot be undone."
+        onConfirm={handleCancel}
+        confirmText="Cancel Challan"
+        destructive={true}
+      />
+
+      <ConfirmDialog 
+        open={confirmDialogOpen} 
+        onOpenChange={setConfirmDialogOpen}
+        title="Confirm Challan"
+        description="Are you sure you want to confirm this challan? This will permanently deduct stock from inventory."
+        onConfirm={handleConfirm}
+        confirmText="Confirm Challan"
+        destructive={false}
+      />
     </div>
   );
 }

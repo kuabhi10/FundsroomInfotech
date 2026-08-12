@@ -22,6 +22,7 @@ import InvoiceList from '../pages/invoices/List';
 import InvoiceDetail from '../pages/invoices/Detail';
 
 import UserList from '../pages/users/List';
+import NotFound from '../pages/NotFound';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
@@ -61,7 +62,7 @@ export const router = createBrowserRouter([
       // Users/Roles Module: Admin
       { path: 'users', element: <ProtectedRoute allowedRoles={['ADMIN']}><UserList /></ProtectedRoute> },
       
-      { path: '*', element: <div>404 Not Found</div> },
+      { path: '*', element: <NotFound /> },
     ],
   },
 ]);

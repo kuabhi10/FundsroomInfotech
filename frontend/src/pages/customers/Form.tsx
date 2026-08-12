@@ -5,6 +5,7 @@ import type { Customer } from '../../types/customer';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { toast } from 'sonner';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function CustomerForm() {
   const { id } = useParams();
@@ -83,7 +84,7 @@ export default function CustomerForm() {
   };
 
   if (isLoading) {
-    return <div className="p-6">Loading...</div>;
+    return <Spinner />;
   }
 
   return (

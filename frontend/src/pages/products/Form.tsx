@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createProduct, getProduct, updateProduct } from '../../api/products';
 import { toast } from 'sonner';
 import { useAuthStore } from '../../store/auth';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function ProductForm() {
   const navigate = useNavigate();
@@ -81,6 +82,10 @@ export default function ProductForm() {
       setLoading(false);
     }
   };
+
+  if (loading && isEdit && !formData.name) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex-1 overflow-y-auto p-6 lg:p-8 bg-background">

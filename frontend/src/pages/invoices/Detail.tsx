@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { invoicesApi } from '../../api';
 import type { Invoice } from '../../api/invoices';
 import { toast } from 'sonner';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function InvoiceDetail() {
   const { id } = useParams();
@@ -55,7 +56,7 @@ export default function InvoiceDetail() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-on-surface-variant">Loading invoice details...</div>;
+    return <Spinner />;
   }
 
   if (!invoice) return null;

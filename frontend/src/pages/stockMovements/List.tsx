@@ -6,6 +6,7 @@ import type { StockMovement, MovementType } from '../../types/stockMovement';
 import type { Product } from '../../types/product';
 import { useAuthStore } from '../../store/auth';
 import { toast } from 'sonner';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function StockMovementsList() {
   const { user } = useAuthStore();
@@ -18,6 +19,7 @@ export default function StockMovementsList() {
   const [data, setData] = useState<StockMovement[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [isListLoading, setIsListLoading] = useState(true);
   const limit = 10;
   
   // Pending filter input states
@@ -54,6 +56,7 @@ export default function StockMovementsList() {
   });
 
   const fetchMovements = useCallback(async () => {
+    setIsListLoading(true);
     try {
       const response = await getStockMovements({
         type: appliedFilters.type as any || undefined,
@@ -67,6 +70,8 @@ export default function StockMovementsList() {
       setTotal(response.total);
     } catch (error) {
       console.error('Failed to fetch stock movements', error);
+    } finally {
+      setIsListLoading(false);
     }
   }, [appliedFilters, page]);
 
@@ -260,6 +265,10 @@ export default function StockMovementsList() {
           </div>
         </div>
 
+        {isListLoading ? (
+          <Spinner />
+        ) : (
+        <>
         {/* Data Table */}
         <div className="bg-surface border border-outline-variant overflow-hidden shadow-sm rounded-none">
           <div className="overflow-x-auto">
@@ -335,6 +344,8 @@ export default function StockMovementsList() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
 
       {/* Modal matching Carbon ERP aesthetic */}

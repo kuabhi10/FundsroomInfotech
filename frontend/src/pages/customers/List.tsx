@@ -12,6 +12,7 @@ import {
   TableRow,
 } from '../../components/ui/table';
 import { Badge } from '../../components/ui/badge';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function CustomerList() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function CustomerList() {
   const [data, setData] = useState<Customer[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const limit = 10;
   
   const [search, setSearch] = useState('');
@@ -39,6 +41,7 @@ export default function CustomerList() {
 
   useEffect(() => {
     const fetchCustomers = async () => {
+      setIsLoading(true);
       try {
         const response = await getCustomers({
           search: debouncedSearch || undefined,
@@ -51,6 +54,8 @@ export default function CustomerList() {
         setTotal(response.total);
       } catch (error) {
         console.error('Failed to fetch customers', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchCustomers();
@@ -132,6 +137,10 @@ export default function CustomerList() {
           </div>
         </div>
 
+        {isLoading ? (
+          <Spinner />
+        ) : (
+        <>
         {/* Data Table */}
         <div className="bg-[var(--color-surface)] border border-[var(--color-outline-variant)] overflow-x-auto">
           <Table>
@@ -214,6 +223,8 @@ export default function CustomerList() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
     </div>
   );

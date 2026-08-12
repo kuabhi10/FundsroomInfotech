@@ -4,6 +4,7 @@ import { usersApi } from '../../api/users';
 import type { User, CreateUserPayload, UpdateUserPayload } from '../../api/users';
 import { UserFormModal } from './components/UserFormModal';
 import { ConfirmModal } from './components/ConfirmModal';
+import { Spinner } from '../../components/ui/spinner';
 
 export default function UserList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -17,14 +18,18 @@ export default function UserList() {
   
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUsers = async (p = page, l = limit, s = search) => {
+    setIsLoading(true);
     try {
       const res = await usersApi.getUsers({ page: p, limit: l, search: s });
       setUsers(res.data);
       setTotal(res.total);
     } catch (error: any) {
       toast.error(error.response?.data?.error || 'Failed to fetch users');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -131,6 +136,10 @@ export default function UserList() {
           </div>
         </div>
 
+        {isLoading ? (
+          <Spinner />
+        ) : (
+        <>
         {/* Data Table */}
         <div className="w-full overflow-x-auto bg-[#ffffff] border-t border-[#e0e0e0]">
           <table className="w-full text-left border-collapse text-sm whitespace-nowrap">
@@ -228,6 +237,8 @@ export default function UserList() {
             </div>
           </div>
         </div>
+        </>
+        )}
       </div>
 
       <UserFormModal 
