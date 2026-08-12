@@ -10,6 +10,7 @@ const customers_routes_1 = __importDefault(require("./modules/customers/customer
 const products_routes_1 = __importDefault(require("./modules/products/products.routes"));
 const stockMovements_routes_1 = __importDefault(require("./modules/stockMovements/stockMovements.routes"));
 const challans_routes_1 = __importDefault(require("./modules/challans/challans.routes"));
+const invoices_routes_1 = __importDefault(require("./modules/invoices/invoices.routes"));
 const app = (0, express_1.default)();
 // Dynamic CORS configuration supporting Vercel previews, local dev, and cleaned FRONTEND_URL env var
 const getCleanOrigin = (urlStr) => {
@@ -55,6 +56,7 @@ app.use('/customers', customers_routes_1.default);
 app.use('/products', products_routes_1.default);
 app.use('/stock-movements', stockMovements_routes_1.default);
 app.use('/challans', challans_routes_1.default);
+app.use('/invoices', invoices_routes_1.default);
 // Health Check
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' });

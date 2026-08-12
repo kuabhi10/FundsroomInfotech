@@ -5,6 +5,7 @@ import customersRoutes from './modules/customers/customers.routes';
 import productsRoutes from './modules/products/products.routes';
 import stockMovementsRoutes from './modules/stockMovements/stockMovements.routes';
 import challansRoutes from './modules/challans/challans.routes';
+import invoicesRoutes from './modules/invoices/invoices.routes';
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use('/customers', customersRoutes);
 app.use('/products', productsRoutes);
 app.use('/stock-movements', stockMovementsRoutes);
 app.use('/challans', challansRoutes);
+app.use('/invoices', invoicesRoutes);
 
 // Health Check
 app.get('/health', (req: Request, res: Response) => {

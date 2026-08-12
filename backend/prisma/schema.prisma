@@ -191,3 +191,10 @@ model ChallanSequence {
 
   @@map("challan_sequences")
 }
+
+model InvoiceSequence {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  @@map("invoice_sequences")
+}
