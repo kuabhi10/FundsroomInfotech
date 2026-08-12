@@ -57,6 +57,19 @@ export default function ChallanDetail() {
     }
   };
 
+  const handleGenerateInvoice = async () => {
+    try {
+      if (!id) return;
+      // using dynamic import for invoicesApi since it's not imported at the top, or I can import it at the top. Wait, let me import it at the top.
+      const { invoicesApi } = await import('../../api');
+      const invoice = await invoicesApi.createInvoice(id);
+      toast.success('Invoice generated successfully');
+      navigate(`/invoices/${invoice.id}`);
+    } catch (err: any) {
+      toast.error('Failed to generate invoice', { description: err.response?.data?.error || err.message });
+    }
+  };
+
   if (loading) {
     return <div className="p-8 text-center text-on-surface-variant">Loading challan details...</div>;
   }
@@ -130,8 +143,8 @@ export default function ChallanDetail() {
                   Cancel Challan
                 </button>
                 <button 
-                  disabled
-                  className="px-4 py-2 bg-primary text-on-primary opacity-50 cursor-not-allowed transition-colors rounded text-sm font-medium flex items-center gap-2 shadow-sm"
+                  onClick={handleGenerateInvoice}
+                  className="px-4 py-2 bg-primary text-on-primary hover:bg-primary/90 transition-colors rounded text-sm font-medium flex items-center gap-2 shadow-sm"
                 >
                   <span className="material-symbols-outlined text-sm">receipt_long</span>
                   Generate Invoice

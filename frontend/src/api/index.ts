@@ -8,5 +8,6 @@ export * as customersApi from './customers';
 export * as productsApi from './products';
 export * as stockMovementsApi from './stockMovements';
 export * as challansApi from './challans';
+export * as invoicesApi from './invoices';
 
 export default api;
