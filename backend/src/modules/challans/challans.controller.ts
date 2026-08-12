@@ -3,7 +3,7 @@ import * as challansService from './challans.service';
 
 export const createChallan = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId || (req as any).user.id;
     const { customerId, status, items } = req.body;
     
     const challan = await challansService.createChallan(customerId, status, items, userId);
@@ -42,7 +42,7 @@ export const updateChallan = async (req: Request, res: Response, next: NextFunct
 
 export const confirmChallan = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId || (req as any).user.id;
     const challan = await challansService.confirmChallan(req.params.id as string, userId);
     res.status(200).json({ data: challan });
   } catch (error) {
@@ -52,7 +52,7 @@ export const confirmChallan = async (req: Request, res: Response, next: NextFunc
 
 export const cancelChallan = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId || (req as any).user.id;
     const challan = await challansService.cancelChallan(req.params.id as string, userId);
     res.status(200).json({ data: challan });
   } catch (error) {
