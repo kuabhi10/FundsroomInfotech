@@ -20,7 +20,6 @@ router.post(
 router.get(
   '/',
   authorize('ADMIN', 'SALES', 'ACCOUNTS'),
-  validateRequest(getInvoicesQuerySchema),
   invoicesController.getInvoices
 );
 

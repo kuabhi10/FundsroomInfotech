@@ -105,8 +105,8 @@ export const generateInvoicePdf = async (id: string, res: Response) => {
 
   const doc = new PDFDocument({ margin: 50 });
 
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename=Invoice-${invoice.invoiceNumber}.pdf`);
+  // Trick IDM by returning a generic octet-stream and NO Content-Disposition
+  res.setHeader('Content-Type', 'application/octet-stream');
 
   doc.pipe(res);
 

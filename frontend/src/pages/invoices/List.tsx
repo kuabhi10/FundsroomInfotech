@@ -22,13 +22,12 @@ export default function InvoiceList() {
   const fetchInvoices = async () => {
     try {
       setLoading(true);
-      const res = await invoicesApi.getInvoices({
-        page,
-        limit,
-        customerId,
-        dateFrom,
-        dateTo
-      });
+      const params: any = { page, limit };
+      if (customerId) params.customerId = customerId;
+      if (dateFrom) params.dateFrom = dateFrom;
+      if (dateTo) params.dateTo = dateTo;
+      
+      const res = await invoicesApi.getInvoices(params);
       setInvoices(res.data);
       setTotal(res.total);
     } catch (error: any) {

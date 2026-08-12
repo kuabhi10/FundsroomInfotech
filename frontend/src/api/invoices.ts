@@ -37,3 +37,8 @@ export const createInvoice = async (challanId: string): Promise<Invoice> => {
   const { data } = await api.post('/invoices', { challanId });
   return data.data;
 };
+
+export const downloadInvoicePdf = async (id: string): Promise<Blob> => {
+  const { data } = await api.get(`/invoices/${id}/pdf`, { responseType: 'blob' });
+  return data;
+};

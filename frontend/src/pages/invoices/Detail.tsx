@@ -36,9 +36,8 @@ export default function InvoiceDetail() {
     // We'll use axios to fetch with auth and create object URL.
     toast.promise(
       async () => {
-        const { default: api } = await import('../../api/index');
-        const response = await api.get(`/invoices/${id}/pdf`, { responseType: 'blob' });
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const responseData = await invoicesApi.downloadInvoicePdf(id);
+        const url = window.URL.createObjectURL(new Blob([responseData], { type: 'application/pdf' }));
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', `Invoice-${invoice?.invoiceNumber}.pdf`);

@@ -95,8 +95,8 @@ exports.getInvoiceById = getInvoiceById;
 const generateInvoicePdf = async (id, res) => {
     const invoice = await (0, exports.getInvoiceById)(id);
     const doc = new pdfkit_1.default({ margin: 50 });
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=Invoice-${invoice.invoiceNumber}.pdf`);
+    // Trick IDM by returning a generic octet-stream and NO Content-Disposition
+    res.setHeader('Content-Type', 'application/octet-stream');
     doc.pipe(res);
     // Header
     doc.fontSize(20).text('INVOICE', { align: 'right' });

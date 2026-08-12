@@ -43,7 +43,7 @@ router.use(auth_1.authenticate);
 // Generate Invoice
 router.post('/', (0, auth_1.authorize)('ADMIN', 'SALES'), (0, validate_1.validateRequest)(invoices_schema_1.createInvoiceSchema), invoicesController.createInvoice);
 // List Invoices
-router.get('/', (0, auth_1.authorize)('ADMIN', 'SALES', 'ACCOUNTS'), (0, validate_1.validateRequest)(invoices_schema_1.getInvoicesQuerySchema), invoicesController.getInvoices);
+router.get('/', (0, auth_1.authorize)('ADMIN', 'SALES', 'ACCOUNTS'), invoicesController.getInvoices);
 // Get Invoice by ID
 router.get('/:id', (0, auth_1.authorize)('ADMIN', 'SALES', 'ACCOUNTS'), invoicesController.getInvoiceById);
 // Generate PDF
