@@ -5,8 +5,8 @@ import api from '../../api/axios';
 import { toast } from 'sonner';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@erp.local');
-  const [password, setPassword] = useState('Password123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { user, token, setAuth } = useAuthStore();
   const navigate = useNavigate();
